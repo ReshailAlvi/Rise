@@ -26,8 +26,10 @@ public class ProductPage extends Driver {
             return;
         }
 
+        List<WebElement> randomItemList = helper.selectRandomItems(addToCartButton,numberOfItems);
+
         for (int index = 0; index < numberOfItems; index++) {
-            addToCartButton.get(index).click();
+            randomItemList.get(index).click();
         }
     }
 }

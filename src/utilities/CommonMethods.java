@@ -10,6 +10,7 @@ import resources.Constants;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 public class CommonMethods {
 
@@ -57,5 +58,19 @@ public class CommonMethods {
                 throw new RuntimeException("The page kept loading...");
             }
         }
+    }
+
+    public List<WebElement> selectRandomItems(List<WebElement> list, int numberOfItems) {
+        Random rand = new Random();
+        List<WebElement> randomList = null;
+
+        int numberOfElements = numberOfItems;
+
+        for (int i = 0; i < numberOfElements; i++) {
+            int randomIndex = rand.nextInt(list.size());
+            randomList.add(list.get(randomIndex));
+            list.remove(randomIndex);
+        }
+        return randomList;
     }
 }
