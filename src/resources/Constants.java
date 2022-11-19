@@ -7,6 +7,8 @@ public class Constants {
     public static String configProperties = "/src/resources/config.properties";
     //endpoints to validate
     public static String loginEndpoint = "https://www.saucedemo.com/";
+
+    public static String baseURL = "https://www.saucedemo.com/";
     public static String productEndpoint = "/inventory.html";
     //path of excel sheets for data
     public static String pathForTestData = "/src/resources/testdata.xlsx";

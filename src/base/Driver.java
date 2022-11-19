@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -44,15 +45,15 @@ public class Driver {
         if (browserToUse.equalsIgnoreCase("Firefox")) {
             WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
-            if(headless.equalsIgnoreCase("YES")){
+            if (headless.equalsIgnoreCase("YES")) {
                 options.addArguments("--headless");
             }
-            driver = new RemoteWebDriver(new URL(Constants.remoteDriver),options);
+            driver = new RemoteWebDriver(new URL(Constants.remoteDriver), options);
         } else if (browserToUse.equalsIgnoreCase("Chrome")) {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--disable-notifications");
-            if(headless.equalsIgnoreCase("YES")){
+            if (headless.equalsIgnoreCase("YES")) {
                 options.addArguments("--headless");
             }
             driver = new RemoteWebDriver(new URL(Constants.remoteDriver),options);
@@ -60,23 +61,17 @@ public class Driver {
             WebDriverManager.iedriver().setup();
             driver = new InternetExplorerDriver();
             InternetExplorerOptions options = new InternetExplorerOptions();
-            driver = new RemoteWebDriver(new URL(Constants.remoteDriver),options);
+            driver = new RemoteWebDriver(new URL(Constants.remoteDriver), options);
         } else {
             throw new RuntimeException("Browser type unsupported");
         }
 
         //Setting implicit wait
         driver.manage().timeouts().implicitlyWait(Constants.standardTimeOut, TimeUnit.SECONDS);
-
+        driver.manage().getCookies();
         driver.manage().window().maximize();
 
         driver.get(envConfig.getProperty("baseUrl"));
-    }
-
-    @BeforeMethod
-    public void loadBaseUrl(Method method) {
-        driver.get(envConfig.getProperty("baseUrl"));
-
     }
 
     @AfterMethod

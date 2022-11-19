@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import resources.Constants;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -62,13 +63,13 @@ public class CommonMethods {
 
     public List<WebElement> selectRandomItems(List<WebElement> list, int numberOfItems) {
         Random rand = new Random();
-        List<WebElement> randomList = null;
+        List<WebElement> randomList = new ArrayList<>();
 
         int numberOfElements = numberOfItems;
 
         for (int i = 0; i < numberOfElements; i++) {
             int randomIndex = rand.nextInt(list.size());
-            randomList.add(list.get(randomIndex));
+            randomList.add(i,list.get(randomIndex));
             list.remove(randomIndex);
         }
         return randomList;

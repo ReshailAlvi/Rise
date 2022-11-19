@@ -17,11 +17,6 @@ public class LoginTests extends Driver{
         loginPage = new LoginPage();
     }
 
-    @AfterClass
-    public void closeBrowser(){
-        driver.quit();
-    }
-
     @BeforeMethod
     public void navigateToLogin(){
         Assert.assertTrue(driver.getCurrentUrl().contains(Constants.loginEndpoint));

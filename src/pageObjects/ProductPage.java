@@ -3,6 +3,7 @@ import base.Driver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 import utilities.CommonMethods;
 
 import java.util.List;
@@ -18,7 +19,6 @@ public class ProductPage extends Driver {
 
     @FindBy(xpath = "//button[contains (@class, 'btn_inventory')]")
     List<WebElement> addToCartButton;
-
 
     public void addElementsToCart(int numberOfItems){
         if(numberOfItems > addToCartButton.size()) {

@@ -7,7 +7,6 @@
     <test name="Login Page Tests">
         <parameter name = "browser" value="Chrome"/>
         <classes>
-            <class name="tests.LoginTests"></class>
             <class name="tests.ProductPageTests"></class>
         </classes>
     </test>
