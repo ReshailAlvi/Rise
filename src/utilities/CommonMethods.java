@@ -9,9 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import resources.Constants;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CommonMethods {
 
@@ -21,57 +19,73 @@ public class CommonMethods {
         this.driver = Driver.driver;
     }
 
-    public void hoverOverElement(WebElement ele){
-        Actions builder = new Actions(driver);
-        builder.moveToElement(ele).perform();
-    }
-
-    public void hoverOverElementAndClick(WebElement elementToHover, WebElement elementToClick){
-        Actions builder = new Actions(driver);
-        builder.moveToElement(elementToHover).perform();
-        elementToClick.click();
-    }
-
-    public void clickElement(WebElement ele){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.standardWaitTime));
-        try {
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(ele));
-            element.click();
-        }catch (Exception e){
-            throw new RuntimeException("Unable to click on "+ele);
-        }
-    }
-
-    public void forceClick(WebElement ele){
-        //sometimes elements are both visible and enabled but still can't be clicked
-        JavascriptExecutor executor=(JavascriptExecutor)driver;
-        executor.executeScript("arguments[0].click()", ele);
-    }
-
-    public void waitForLoader(){
-        List<WebElement> element = driver.findElements(By.className("q-loader"));
-
-        if(element.size() >0) {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.standardTimeOut));
-            try {
-                wait.until(ExpectedConditions.invisibilityOf(element.get(0)));
-            } catch (Exception e) {
-                throw new RuntimeException("The page kept loading...");
-            }
-        }
-    }
-
-    public List<WebElement> selectRandomItems(List<WebElement> list, int numberOfItems) {
-        Random rand = new Random();
+    public List<WebElement> selectRandomItems(List<WebElement> list, int numberOfItems){
+        HashSet<Integer> set = new HashSet<>();
+        Random random = new Random();
         List<WebElement> randomList = new ArrayList<>();
+        for (int i = 0; i <numberOfItems ; i++) {
+            int int_random = random.nextInt(list.size());
+            while(set.contains(int_random)){
+                int_random = random.nextInt(list.size());
+            }
+            set.add(int_random);
+        }
 
-        int numberOfElements = numberOfItems;
+        // creates Iterator oblect.
+        Iterator itr = set.iterator();
 
-        for (int i = 0; i < numberOfElements; i++) {
-            int randomIndex = rand.nextInt(list.size());
-            randomList.add(i,list.get(randomIndex));
-            list.remove(randomIndex);
+        for (int j = 0; j < numberOfItems; j++) {
+            int index = (int) itr.next();
+            randomList.add(j,list.get(index));
         }
         return randomList;
+    }
+
+    public double removeItemFromCart(List<WebElement> list, int budget) throws InterruptedException {
+        double[] priceArray = getPriceOfAllItemsInCart(list);
+        int index = findItemToRemove(priceArray,budget);
+        double valueOfItem = priceArray[index];
+        System.out.println("Removing this item from cart: "+valueOfItem);
+        //remove that item from list
+        removeItem(list.get(index),valueOfItem);
+        Thread.sleep(5000); // these are added just for demo purposes
+        //return value of item returned so it can be deducted from cart
+        return valueOfItem;
+    }
+
+    public double[] getPriceOfAllItemsInCart(List<WebElement> listOfItems){
+        double[] priceArray = new double[listOfItems.size()];
+        List<WebElement> priceOfItems = listOfItems.get(0).findElements(By.xpath("//*[contains (@class, 'inventory_item_price')]"));
+        for(int i=0; i<listOfItems.size(); i++) {
+            String formatPrice = priceOfItems.get(i).getText().replace("$", "");
+            double value = Double.parseDouble(formatPrice);
+            priceArray[i] = value;
+        }
+        return priceArray;
+    }
+
+    public void removeItem(WebElement ele,double valueOfItem){
+        /*
+            This makes no sense (I know!)
+         */
+        if(valueOfItem == 49.99){
+            ele.findElement(By.id("remove-sauce-labs-fleece-jacket")).click();
+
+        }else{
+            ele.findElement(By.xpath("//button[text() = 'Remove']")).click();
+        }
+    }
+
+    public int findItemToRemove(double[] arr,int budget) {
+        double differenceFromBudget = Math.abs(arr[0] - budget);
+        int idx = 0;
+        for(int c = 1; c < arr.length; c++){
+            double currentItem = Math.abs(arr[c] - budget);
+            if(currentItem < differenceFromBudget){
+                idx = c;
+                differenceFromBudget = currentItem;
+            }
+        }
+        return idx;
     }
 }

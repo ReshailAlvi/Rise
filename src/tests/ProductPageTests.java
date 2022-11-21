@@ -22,7 +22,7 @@ public class ProductPageTests extends Driver {
 
     @AfterClass
     public void closeBrowser(){
-        driver.quit();
+        driver.close();
     }
 
     @Test(priority = 1,dataProvider = "LoginTestData", dataProviderClass = DataProvider.class)
@@ -33,8 +33,20 @@ public class ProductPageTests extends Driver {
     }
 
     @Test(priority = 2)
-    public void addRandomItemsToCart(){
+    public void addRandomItemsToCart() throws InterruptedException {
         productPage.addElementsToCart(Constants.numberOfItemsToSelectOnProductPage);
+    }
+
+    @Test(priority =  3)
+    public void findItemWithHighestValueInCart() {
+        productPage.navigateToCart();
+        productPage.fetchItemWithHighestValueInCart(Constants.numberOfItemsToSelectOnProductPage);
+    }
+
+    @Test(priority = 4)
+    public void bringCartUnderBudget() throws InterruptedException {
+        double cartValue = productPage.getCartValue();
+        productPage.getCartWithinBudget(cartValue,Constants.numberOfItemsToSelectOnProductPage);
     }
 
 }

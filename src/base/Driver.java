@@ -57,6 +57,7 @@ public class Driver {
                 options.addArguments("--headless");
             }
             driver = new RemoteWebDriver(new URL(Constants.remoteDriver),options);
+            //driver = new ChromeDriver(options);
         } else if (browserToUse.equalsIgnoreCase("IE")) {
             WebDriverManager.iedriver().setup();
             driver = new InternetExplorerDriver();
@@ -74,10 +75,6 @@ public class Driver {
         driver.get(envConfig.getProperty("baseUrl"));
     }
 
-    @AfterMethod
-    public void deleteCookies(){
-        driver.manage().deleteAllCookies();
-    }
 
     @AfterSuite
     public void suiteTearDown() {
